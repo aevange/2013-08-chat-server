@@ -3,16 +3,10 @@ obj.username = prompt("What is your name?");
 var friendHash = {};
 
 var setLink = function(){
-  var link = "http://127.0.0.1:8080";
-    // if(obj.roomname !== undefined){
-    //   link += obj.roomname;
-    // } else {
-    //   link += "message";
-    // }
-    return link;
+    return "http://127.0.0.1:8080";
 };
 
-var Message = Backbone.Model.extend();
+var Message = Backbone.Model.extend({});
 
 var MessageView = Backbone.View.extend({
   render: function(){
@@ -27,18 +21,12 @@ var MessageView = Backbone.View.extend({
   }
 });
 
-// $.ajaxPrefilter(function(settings, _, jqXHR) {
-//   jqXHR.setRequestHeader("X-Parse-Application-Id", "voLazbq9nXuZuos9hsmprUz7JwM2N0asnPnUcI7r");
-//   jqXHR.setRequestHeader("X-Parse-REST-API-Key", "QC2F43aSAghM97XidJw8Qiy1NXlpL5LR45rhAVAf");
-// });
-
 var addPost = function(){
   $.ajax(setLink(), {
     contentType: 'application/json',
     type: 'POST',
     data: JSON.stringify(obj),
     success: function(result) {
-      console.log('result: ',result);
     }
   });
 };
@@ -69,13 +57,12 @@ $(document).ready(function(){
   }); //end #submit
 
   setInterval(function(){
-    $.ajax('http://127.0.0.1:8080', {
+    $.ajax(setLink(), {
       contentType: 'application/json',
       success: function(response){
-        console.log(response);
+        var response = JSON.parse(response);
         $('#container').html('');
         var input;
-
         var messages = $.map(response.results, function(messageData){
           return new Message(messageData);
         });

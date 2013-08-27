@@ -3,7 +3,7 @@
  * basic-server.js.  So you must figure out how to export the function
  * from this file and include it in basic-server.js. Check out the
  * node module documentation at http://nodejs.org/api/modules.html. */
-var storage = {};
+var storage = [];
 
 var defaultCorsHeaders = {
   "access-control-allow-origin": "*",
@@ -25,12 +25,17 @@ var handlePost = function(request, response) {
     var test = JSON.parse(body);
     console.log(test.username + ": " + test.text);
     //do something with storage;
+    storage.unshift(test);
+    console.log(storage);
+    response.end();
   });
-
-  response.end();
 };
 
-var handleGet = function(){};
+var handleGet = function(request, response){
+  console.log("we'll send back: ", JSON.stringify({results: storage.slice(0)}));
+  response.write(JSON.stringify({results: storage.slice(0)}));
+  response.end();
+};
 
 
 var handleRequest = function(request, response) {
@@ -41,19 +46,15 @@ var handleRequest = function(request, response) {
   headers['Content-Type'] = "text/plain";
   response.writeHead(statusCode, headers);
 
-
-
-
-
   if(request.method === 'POST'){
     handlePost(request, response);
    } else if (request.method === 'GET') {
-     //send back messages?
+    handleGet(request, response);
      something = "GET request";
   } else {
     something = "statusCode: " + statusCode;
   }
-  response.end(something);
+  response.end();
 };
 
 exports.handleRequest = handleRequest;
