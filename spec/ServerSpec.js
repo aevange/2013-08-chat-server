@@ -38,6 +38,7 @@ function StubResponse() {
 
 describe("Node Server Request Listener Function", function() {
  it("Should answer GET requests for /classes/room", function() {
+  debugger;
    var req = new StubRequest("http://127.0.0.1:8080/classes/room1",
                              "GET");
    var res = new StubResponse();
