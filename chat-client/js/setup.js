@@ -27,6 +27,7 @@ var addPost = function(){
     type: 'POST',
     data: JSON.stringify(obj),
     success: function(result) {
+      console.log('result: ',result);
     }
   });
 };
@@ -60,10 +61,10 @@ $(document).ready(function(){
     $.ajax(setLink(), {
       contentType: 'application/json',
       success: function(response){
-        var response = JSON.parse(response);
+        response = JSON.parse(response);
         $('#container').html('');
         var input;
-        var messages = $.map(response.results, function(messageData){
+        var messages = $.map(response, function(messageData){
           return new Message(messageData);
         });
 

@@ -21,30 +21,37 @@ var handlePost = function(request, response) {
   request.on('end', function(){
     var test = JSON.parse(body);
     storage.unshift(test);
+    response.writeHead(201);
     response.end();
   });
 };
 
 var handleGet = function(request, response){
-  response.write(JSON.stringify({results: storage.slice(0)}));
-  response.end();
+  var urls = "http://127.0.0.1:8080/classes/";
+
+  if (request.uri === urls + "messages" || request.url === urls + "room1") {
+    console.log(request);
+    response.writeHead(200);
+  } else {
+    response.writeHead(404);
+  }
+  response.end(JSON.stringify(storage.slice(0)));
 };
 
 
 var handleRequest = function(request, response) {
-  var statusCode = 200;
+  var statusCode = 404;
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
   response.writeHead(statusCode, headers);
 
-  if(request.method === 'POST'){
+  if (request.method === 'POST') {
     handlePost(request, response);
-   } else if (request.method === 'GET') {
+  } else if (request.method === 'GET') {
     handleGet(request, response);
   } else {
-    response.write(JSON.stringify("statusCode: " + statusCode));
+    response.end();
   }
-  response.end();
 };
 
 exports.handleRequest = handleRequest;
