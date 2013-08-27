@@ -19,14 +19,21 @@ var handleRequest = function(request, response) {
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
   response.writeHead(statusCode, headers);
+  
+
   if(request.method === 'POST'){
-    storage = request;
-    console.log(storage);
+      // request.setEncoding('utf8');
+    request.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
+      var test = JSON.parse(chunk);
+      console.log(test.username);
+      console.log(test.text);
+      });
     something = "message POSTED";
   } else if (request.method === 'GET') {
 
   } else {
-    something = statusCode;
+    something = "statusCode";
   }
   response.end(something);
 };

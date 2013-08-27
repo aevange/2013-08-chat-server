@@ -9,6 +9,23 @@ var server = http.createServer(requestHandler.handleRequest);
 console.log("Listening on http://" + ip + ":" + port);
 server.listen(port, ip);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* This is the callback function that will be called each time a
  * client (i.e.. a web browser) makes a request to our server. */
 // var requestListener = function (request, response) {
