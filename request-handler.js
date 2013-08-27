@@ -12,35 +12,26 @@ var defaultCorsHeaders = {
   "access-control-max-age": 10 // Seconds.
 };
 
-
-
 var handlePost = function(request, response) {
   var body = "";
-  request.on('data', function (chunk) { // add request.on('end' ...)
-    console.log('BODY: ' + chunk);
+  request.on('data', function (chunk) {
     body += chunk;
   });
 
   request.on('end', function(){
     var test = JSON.parse(body);
-    console.log(test.username + ": " + test.text);
-    //do something with storage;
     storage.unshift(test);
-    console.log(storage);
     response.end();
   });
 };
 
 var handleGet = function(request, response){
-  console.log("we'll send back: ", JSON.stringify({results: storage.slice(0)}));
   response.write(JSON.stringify({results: storage.slice(0)}));
   response.end();
 };
 
 
 var handleRequest = function(request, response) {
-  var something;
-  console.log("Serving request type " + request.method + " for url " + request.url);
   var statusCode = 200;
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
@@ -50,15 +41,10 @@ var handleRequest = function(request, response) {
     handlePost(request, response);
    } else if (request.method === 'GET') {
     handleGet(request, response);
-     something = "GET request";
   } else {
-    something = "statusCode: " + statusCode;
+    response.write(JSON.stringify("statusCode: " + statusCode));
   }
   response.end();
 };
 
 exports.handleRequest = handleRequest;
-
-//"https://api.parse.com/1/classes/messages"
-
-//unless GET or POST send statusCode 200.
