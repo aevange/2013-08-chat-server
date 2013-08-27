@@ -3,7 +3,7 @@
  * basic-server.js.  So you must figure out how to export the function
  * from this file and include it in basic-server.js. Check out the
  * node module documentation at http://nodejs.org/api/modules.html. */
-var storage;
+var storage = {};
 
 var defaultCorsHeaders = {
   "access-control-allow-origin": "*",
@@ -12,28 +12,46 @@ var defaultCorsHeaders = {
   "access-control-max-age": 10 // Seconds.
 };
 
+
+
+var handlePost = function(request, response) {
+  var body = "";
+  request.on('data', function (chunk) { // add request.on('end' ...)
+    console.log('BODY: ' + chunk);
+    body += chunk;
+  });
+
+  request.on('end', function(){
+    var test = JSON.parse(body);
+    console.log(test.username + ": " + test.text);
+    //do something with storage;
+  });
+
+  response.end();
+};
+
+var handleGet = function(){};
+
+
 var handleRequest = function(request, response) {
-	var something;
+  var something;
   console.log("Serving request type " + request.method + " for url " + request.url);
   var statusCode = 200;
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
   response.writeHead(statusCode, headers);
-  
+
+
+
+
 
   if(request.method === 'POST'){
-      // request.setEncoding('utf8');
-    request.on('data', function (chunk) {
-      console.log('BODY: ' + chunk);
-      var test = JSON.parse(chunk);
-      console.log(test.username);
-      console.log(test.text);
-      });
-    something = "message POSTED";
-  } else if (request.method === 'GET') {
-
+    handlePost(request, response);
+   } else if (request.method === 'GET') {
+     //send back messages?
+     something = "GET request";
   } else {
-    something = "statusCode";
+    something = "statusCode: " + statusCode;
   }
   response.end(something);
 };
